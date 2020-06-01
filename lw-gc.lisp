@@ -39,13 +39,15 @@ interface. This is injected via the interface parent."))
                       (format nil "Allocated ~a out of ~a"
                               (getf info :total-allocated)
                               (getf info :total-size))))
-   (generation-1 gc-generation-info :number 1)
-   (generation-2 gc-generation-info :number 2)
-   (generation-3 gc-generation-info :number 3)
-   (generation-4 gc-generation-info :number 4)
-   (generation-5 gc-generation-info :number 5)
-   (generation-6 gc-generation-info :number 6)
-   (generation-7 gc-generation-info :number 7)
+   ;; Is it a good idea to do this here? Would it be better to declare
+   ;; this as a fixed array as part of the slots?
+   (generation-1 gc-generation-info :number 1 :accessor gc-info-generation-1)
+   (generation-2 gc-generation-info :number 2 :accessor gc-info-generation-2)
+   (generation-3 gc-generation-info :number 3 :accessor gc-info-generation-3)
+   (generation-4 gc-generation-info :number 4 :accessor gc-info-generation-4)
+   (generation-5 gc-generation-info :number 5 :accessor gc-info-generation-5)
+   (generation-6 gc-generation-info :number 6 :accessor gc-info-generation-6)
+   (generation-7 gc-generation-info :number 7 :accessor gc-info-generation-7)
    (button-full-gc capi:push-button :text "Collect all" :default-p t))
   (:layouts
    (main-layout capi:column-layout '(allocated
