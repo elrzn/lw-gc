@@ -2,27 +2,26 @@
 
 (in-package #:lw-gc)
 
-;; How can I call methods when declaring an interface?
 (defmethod gc-generation-info-title ((self gc-generation-info))
-  (format nil "Generation #~a" (generation-number self)))
+  "Return the title of the GC-GENERATION-INFO object, based on the
+given generation id."
+  (format nil "Generation ~a" (gc-generation-info-generation-number self)))
 
 (defmethod gc-generation-info-allocated ((self gc-generation-info))
   (system:count-gen-num-allocation (gc-generation-info-generation-number self)))
 
 (capi:define-interface gc-generation-info ()
-  ((generation-number :initarg :number
-                      :reader gc-generation-info-generation-number
-                      :type fixnum
-                      :initform (error "Generation number is mandatory.")
-                      :documentation
-                      "The generation number that identifies the
-interface. This is injected via the interface parent."))
+  ((generation-number
+    :initarg :number
+    :reader gc-generation-info-generation-number
+    :type fixnum
+    :initform (error "Generation number is mandatory.")
+    :documentation
+    "The generation number that identifies the interface. This is
+injected via the interface parent."))
   (:panes
-   (title capi:title-pane
-          :text (format nil "Generation ~a" generation-number))
-   (allocated capi:title-pane
-              :text (format nil "~a allocated"
-                            (system:count-gen-num-allocation generation-number)))
+   (title capi:title-pane :accessor gc-generation-info-title)
+   (allocated capi:title-pane :accessor gc-generation-info-allocated)
    (gc-button capi:push-button
               :text "Collect"
               :callback #'(lambda (data interface)
@@ -30,6 +29,20 @@ interface. This is injected via the interface parent."))
                             (harlequin-common-lisp:gc-generation generation-number))))
   (:layouts
    (main-layout capi:row-layout '(title allocated gc-button))))
+
+(defmethod initialize-instance :after ((self gc-generation-info) &key)
+  (let ((number (gc-generation-info-generation-number self)))
+    ;; For some reason I cannot make use of the methods defined above
+    ;; for returning the title and the number of allocated objects for
+    ;; the given GC-GENERATION-INFO instance. I believe I have to do
+    ;; some reading on method qualifiers. Perhaps these methods are
+    ;; not even attached yet at the moment of creating the new
+    ;; instance?
+    (setf (capi:title-pane-text (gc-generation-info-title self))
+          (format nil "Generation ~a" number))
+    (setf (capi:title-pane-text (gc-generation-info-allocated self))
+          (format nil "~a allocated"
+                  (system:count-gen-num-allocation number)))))
 
 (capi:define-interface gc-info ()
   ()
