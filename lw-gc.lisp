@@ -20,8 +20,8 @@ given generation id."
     "The generation number that identifies the interface. This is
 injected via the interface parent."))
   (:panes
-   (title capi:title-pane :accessor gc-generation-info-title)
-   (allocated capi:title-pane :accessor gc-generation-info-allocated)
+   (title capi:title-pane :accessor gc-generation-info-title-pane)
+   (allocated capi:title-pane :accessor gc-generation-info-allocated-pane)
    (gc-button capi:push-button
               :text "Collect"
               :callback #'(lambda (data interface)
@@ -31,18 +31,11 @@ injected via the interface parent."))
    (main-layout capi:row-layout '(title allocated gc-button))))
 
 (defmethod initialize-instance :after ((self gc-generation-info) &key)
-  (let ((number (gc-generation-info-generation-number self)))
-    ;; For some reason I cannot make use of the methods defined above
-    ;; for returning the title and the number of allocated objects for
-    ;; the given GC-GENERATION-INFO instance. I believe I have to do
-    ;; some reading on method qualifiers. Perhaps these methods are
-    ;; not even attached yet at the moment of creating the new
-    ;; instance?
-    (setf (capi:title-pane-text (gc-generation-info-title self))
-          (format nil "Generation ~a" number))
-    (setf (capi:title-pane-text (gc-generation-info-allocated self))
-          (format nil "~a allocated"
-                  (system:count-gen-num-allocation number)))))
+  (setf (capi:title-pane-text (gc-generation-info-title-pane self))
+        (gc-generation-info-title self))
+  (setf (capi:title-pane-text (gc-generation-info-allocated-pane self))
+        (format nil "~a allocated"
+                (gc-generation-info-allocated self))))
 
 (capi:define-interface gc-info ()
   ()
