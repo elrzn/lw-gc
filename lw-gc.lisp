@@ -8,6 +8,8 @@ given generation id."
   (format nil "Generation ~a" (gc-generation-info-generation-number self)))
 
 (defmethod gc-generation-info-allocated ((self gc-generation-info))
+  "Return the number of objects that are allocated for the given
+generation."
   (system:count-gen-num-allocation (gc-generation-info-generation-number self)))
 
 (capi:define-interface gc-generation-info ()
