@@ -59,7 +59,9 @@ generation."
   (tick self))
 
 (capi:define-interface gc-info ()
-  ()
+  ((timer :initarg :timer
+          :accessor gc-info-timer
+          :initform nil))
   (:panes
    (allocated
     capi:title-pane
@@ -117,5 +119,11 @@ generations, as well as an option to perform a full cleanup")
 
 (defun main ()
   "Starts the application."
-  (capi:display
-   (make-instance 'gc-info)))
+  (let ((app (make-instance 'gc-info)))
+    ;; Create and setup the timer that will periodically refresh the
+    ;; application content.
+    (with-slots (timer)
+        app
+      (setf timer (mp:make-timer #'(lambda () (tick app))))
+      (mp:schedule-timer timer 900 2))
+    (capi:display app)))
