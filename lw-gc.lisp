@@ -53,6 +53,8 @@ generation."
         (format nil "~a allocated"
                 (gc-generation-info-allocated self))))
 
+;; DELME This is no longer necessary since GC-INFO will already
+;; perform the TICK function for each generation. Consider removing.
 (defmethod initialize-instance :after ((self gc-generation-info) &key)
   (tick self))
 
