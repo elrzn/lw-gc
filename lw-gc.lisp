@@ -79,6 +79,9 @@ generation."
    (button-full-gc capi:push-button
                    :text "Collect all"
                    :default-p t
+                   :callback #'(lambda (data interface)
+                                 (declare (ignore data interface))
+                                 (harlequin-common-lisp:gc-generation t))
                    :documentation "Perform a full collection."))
   (:layouts
    (main-layout capi:column-layout '(allocated
