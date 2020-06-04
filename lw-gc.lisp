@@ -46,22 +46,22 @@ given generation id."
 generation."
   (system:count-gen-num-allocation (gc-generation-info-generation-number self)))
 
-(defmethod initialize-instance :after ((self gc-generation-info) &key)
+(defmethod tick ((self gc-generation-info))
   (setf (capi:title-pane-text (gc-generation-info-title-pane self))
         (gc-generation-info-title self))
   (setf (capi:title-pane-text (gc-generation-info-allocated-pane self))
         (format nil "~a allocated"
                 (gc-generation-info-allocated self))))
 
+(defmethod initialize-instance :after ((self gc-generation-info) &key)
+  (tick self))
+
 (capi:define-interface gc-info ()
   ()
   (:panes
    (allocated
     capi:title-pane
-    :text (let* ((info (system:room-values)))
-            (format nil "Allocated ~a out of ~a"
-                    (getf info :total-allocated)
-                    (getf info :total-size)))
+    :accessor gc-info-allocated
     :documentation "Displays the overall allocation for all regions.")
    ;; Is it a good idea to do this here? Would it be better to declare
    ;; this as a fixed array as part of the slots?
@@ -94,6 +94,16 @@ generation."
    "The main interface of the application. Contains an overview of all
 generations, as well as an option to perform a full cleanup")
   (:default-initargs :title "Garbage"))
+
+(defmethod tick ((self gc-info))
+  (setf (capi:title-pane-text (gc-info-allocated self))
+        (let* ((info (system:room-values)))
+          (format nil "Allocated ~a out of ~a"
+                  (getf info :total-allocated)
+                  (getf info :total-size)))))
+
+(defmethod initialize-instance :after ((self gc-info) &key)
+  (tick self))
 
 (defun main ()
   "Starts the application."
