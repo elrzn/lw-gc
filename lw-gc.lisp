@@ -100,7 +100,15 @@ generations, as well as an option to perform a full cleanup")
         (let* ((info (system:room-values)))
           (format nil "Allocated ~a out of ~a"
                   (getf info :total-allocated)
-                  (getf info :total-size)))))
+                  (getf info :total-size))))
+  ;; TODO Refactor this ugly thing.
+  (tick (gc-info-generation-1-pane self))
+  (tick (gc-info-generation-2-pane self))
+  (tick (gc-info-generation-3-pane self))
+  (tick (gc-info-generation-4-pane self))
+  (tick (gc-info-generation-5-pane self))
+  (tick (gc-info-generation-6-pane self))
+  (tick (gc-info-generation-7-pane self)))
 
 (defmethod initialize-instance :after ((self gc-info) &key)
   (tick self))
