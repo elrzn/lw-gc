@@ -12,13 +12,24 @@
     "The generation number that identifies the interface. This is
 injected via the interface parent."))
   (:panes
-   (title capi:title-pane :accessor gc-generation-info-title-pane)
-   (allocated capi:title-pane :accessor gc-generation-info-allocated-pane)
-   (gc-button capi:push-button
-              :text "Collect"
-              :callback #'(lambda (data interface)
-                            (declare (ignore data interface))
-                            (harlequin-common-lisp:gc-generation generation-number))))
+   (title
+    capi:title-pane
+    :accessor gc-generation-info-title-pane
+    :documentation "Display the title of the current generation.")
+   (allocated
+    capi:title-pane
+    :accessor gc-generation-info-allocated-pane
+    :documentation
+    "Display information of the number of allocated objects for the
+current generation.")
+   (gc-button
+    capi:push-button
+    :text "Collect"
+    :callback #'(lambda (data interface)
+                  (declare (ignore data interface))
+                  (harlequin-common-lisp:gc-generation generation-number))
+    :documentation
+    "Performs a garbage collection of the current generation."))
   (:layouts
    (main-layout capi:row-layout '(title allocated gc-button)))
   (:documentation
@@ -45,11 +56,13 @@ generation."
 (capi:define-interface gc-info ()
   ()
   (:panes
-   (allocated capi:title-pane
-              :text (let* ((info (system:room-values)))
-                      (format nil "Allocated ~a out of ~a"
-                              (getf info :total-allocated)
-                              (getf info :total-size))))
+   (allocated
+    capi:title-pane
+    :text (let* ((info (system:room-values)))
+            (format nil "Allocated ~a out of ~a"
+                    (getf info :total-allocated)
+                    (getf info :total-size)))
+    :documentation "Displays the overall allocation for all regions.")
    ;; Is it a good idea to do this here? Would it be better to declare
    ;; this as a fixed array as part of the slots?
    (generation-1 gc-generation-info :number 1 :accessor gc-info-generation-1-pane)
@@ -59,7 +72,10 @@ generation."
    (generation-5 gc-generation-info :number 5 :accessor gc-info-generation-5-pane)
    (generation-6 gc-generation-info :number 6 :accessor gc-info-generation-6-pane)
    (generation-7 gc-generation-info :number 7 :accessor gc-info-generation-7-pane)
-   (button-full-gc capi:push-button :text "Collect all" :default-p t))
+   (button-full-gc capi:push-button
+                   :text "Collect all"
+                   :default-p t
+                   :documentation "Perform a full collection."))
   (:layouts
    (main-layout capi:column-layout '(allocated
                                      generations-layout
@@ -80,5 +96,6 @@ generations, as well as an option to perform a full cleanup")
   (:default-initargs :title "Garbage"))
 
 (defun main ()
+  "Starts the application."
   (capi:display
    (make-instance 'gc-info)))
