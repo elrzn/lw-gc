@@ -2,16 +2,6 @@
 
 (in-package #:lw-gc)
 
-(defmethod gc-generation-info-title ((self gc-generation-info))
-  "Return the title of the GC-GENERATION-INFO object, based on the
-given generation id."
-  (format nil "Generation ~a" (gc-generation-info-generation-number self)))
-
-(defmethod gc-generation-info-allocated ((self gc-generation-info))
-  "Return the number of objects that are allocated for the given
-generation."
-  (system:count-gen-num-allocation (gc-generation-info-generation-number self)))
-
 (capi:define-interface gc-generation-info ()
   ((generation-number
     :initarg :number
@@ -30,7 +20,20 @@ injected via the interface parent."))
                             (declare (ignore data interface))
                             (harlequin-common-lisp:gc-generation generation-number))))
   (:layouts
-   (main-layout capi:row-layout '(title allocated gc-button))))
+   (main-layout capi:row-layout '(title allocated gc-button)))
+  (:documentation
+   "Contains a graphical representation of a GC region
+(generation)."))
+
+(defmethod gc-generation-info-title ((self gc-generation-info))
+  "Return the title of the GC-GENERATION-INFO object, based on the
+given generation id."
+  (format nil "Generation ~a" (gc-generation-info-generation-number self)))
+
+(defmethod gc-generation-info-allocated ((self gc-generation-info))
+  "Return the number of objects that are allocated for the given
+generation."
+  (system:count-gen-num-allocation (gc-generation-info-generation-number self)))
 
 (defmethod initialize-instance :after ((self gc-generation-info) &key)
   (setf (capi:title-pane-text (gc-generation-info-title-pane self))
@@ -49,13 +52,13 @@ injected via the interface parent."))
                               (getf info :total-size))))
    ;; Is it a good idea to do this here? Would it be better to declare
    ;; this as a fixed array as part of the slots?
-   (generation-1 gc-generation-info :number 1 :accessor gc-info-generation-1)
-   (generation-2 gc-generation-info :number 2 :accessor gc-info-generation-2)
-   (generation-3 gc-generation-info :number 3 :accessor gc-info-generation-3)
-   (generation-4 gc-generation-info :number 4 :accessor gc-info-generation-4)
-   (generation-5 gc-generation-info :number 5 :accessor gc-info-generation-5)
-   (generation-6 gc-generation-info :number 6 :accessor gc-info-generation-6)
-   (generation-7 gc-generation-info :number 7 :accessor gc-info-generation-7)
+   (generation-1 gc-generation-info :number 1 :accessor gc-info-generation-1-pane)
+   (generation-2 gc-generation-info :number 2 :accessor gc-info-generation-2-pane)
+   (generation-3 gc-generation-info :number 3 :accessor gc-info-generation-3-pane)
+   (generation-4 gc-generation-info :number 4 :accessor gc-info-generation-4-pane)
+   (generation-5 gc-generation-info :number 5 :accessor gc-info-generation-5-pane)
+   (generation-6 gc-generation-info :number 6 :accessor gc-info-generation-6-pane)
+   (generation-7 gc-generation-info :number 7 :accessor gc-info-generation-7-pane)
    (button-full-gc capi:push-button :text "Collect all" :default-p t))
   (:layouts
    (main-layout capi:column-layout '(allocated
@@ -71,10 +74,10 @@ injected via the interface parent."))
                          generation-7)
                        :title "Generations"
                        :title-position :frame))
-   (:default-initargs :title "Garbage"
-  ; :best-width 640
-  ; :best-height 480
-    ))
+  (:documentation
+   "The main interface of the application. Contains an overview of all
+generations, as well as an option to perform a full cleanup")
+  (:default-initargs :title "Garbage"))
 
 (defun main ()
   (capi:display
