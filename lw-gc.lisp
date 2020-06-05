@@ -110,11 +110,18 @@ generation."
                    :callback #'(lambda (data interface)
                                  (declare (ignore data interface))
                                  (harlequin-common-lisp:gc-generation t))
-                   :documentation "Perform a full collection."))
+                   :documentation "Perform a full collection.")
+   (button-refresh capi:push-button
+                   :text "Refresh"
+                   :default-p t
+                   :callback #'(lambda (data interface)
+                                 (declare (ignore data))
+                                 (tick interface))
+                   :documentation "Perform a manual UI refresh."))
   (:layouts
    (main-layout capi:column-layout '(allocated
                                      generations-layout
-                                     button-full-gc))
+                                     button-layout))
    (generations-layout capi:column-layout
                        '(generation-1
                          generation-2
@@ -122,7 +129,8 @@ generation."
                          generation-4
                          generation-5
                          generation-6
-                         generation-7)))
+                         generation-7))
+   (button-layout capi:row-layout '(button-full-gc button-refresh)))
   (:documentation
    "The main interface of the application. Contains an overview of all
 generations, as well as an option to perform a full cleanup")
