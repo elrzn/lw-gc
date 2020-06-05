@@ -113,7 +113,6 @@ generation."
                    :documentation "Perform a full collection.")
    (button-refresh capi:push-button
                    :text "Refresh"
-                   :default-p t
                    :callback #'(lambda (data interface)
                                  (declare (ignore data))
                                  (tick interface))
