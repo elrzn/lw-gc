@@ -65,13 +65,21 @@ generation."
                 (gc-generation-info-allocated self)))
   (let ((fragmentation (gc-generation-info-fragmentation-state self)))
     (flet ((fetch (key)
-             (format nil "~d" (or (cadr (assoc key fragmentation)) 0))))
-      (setf (capi:title-pane-text (gc-generation-info-cons-title-pane self)) (fetch :cons))
-      (setf (capi:title-pane-text (gc-generation-info-symbol-title-pane self)) (fetch :symbol))
-      (setf (capi:title-pane-text (gc-generation-info-function-title-pane self)) (fetch :function))
-      (setf (capi:title-pane-text (gc-generation-info-weak-title-pane self)) (fetch :weak))
-      (setf (capi:title-pane-text (gc-generation-info-non-pointer-title-pane self)) (fetch :non-pointer))
-      (setf (capi:title-pane-text (gc-generation-info-other-title-pane self)) (fetch :other)))))
+             (format nil "~d"
+                     (or (cadr (assoc key fragmentation))
+                         0))))
+      (setf (capi:title-pane-text (gc-generation-info-cons-title-pane self))
+            (fetch :cons))
+      (setf (capi:title-pane-text (gc-generation-info-symbol-title-pane self))
+            (fetch :symbol))
+      (setf (capi:title-pane-text (gc-generation-info-function-title-pane self))
+            (fetch :function))
+      (setf (capi:title-pane-text (gc-generation-info-weak-title-pane self))
+            (fetch :weak))
+      (setf (capi:title-pane-text (gc-generation-info-non-pointer-title-pane self))
+            (fetch :non-pointer))
+      (setf (capi:title-pane-text (gc-generation-info-other-title-pane self))
+            (fetch :other)))))
 
 ;; DELME This is no longer necessary since GC-INFO will already
 ;; perform the TICK function for each generation. Consider removing.
