@@ -1,0 +1,17 @@
+* lw-gc
+
+This project provides a graphical interface in order to ease the
+tuning of the LispWorks GC.
+
+** Features
+
+It currently displays the amount of allocated data as well as the
+fragmentation state for each generation. The user has the option to
+perform a full collection or target a given generation.
+
+Actual GC tuning options, plotting and tracing may be implemented
+later on.
+
+** LICENSE
+
+ISC
