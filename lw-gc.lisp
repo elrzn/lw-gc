@@ -45,8 +45,8 @@ current generation.")
    (gc-button
     capi:push-button
     :text "Collect"
-    :callback #'(lambda (data interface)
-                  (declare (ignore data interface))
+    :callback-type :none
+    :callback #'(lambda ()
                   (harlequin-common-lisp:gc-generation generation-number))
     :documentation
     "Performs a garbage collection of the current generation."))
