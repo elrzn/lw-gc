@@ -1,11 +1,10 @@
 ;;;; lw-gc.asd
 
 (asdf:defsystem #:lw-gc
-  :description "Describe lw-gc here"
+  :description "Graphical interface for GC tuning."
   :author "Eric Lorenzana"
-  :license  "Specify license here"
-  :version "0.0.1"
+  :license "ISC"
+  :version "0.1.0"
   :serial t
-  :depends-on (#:alexandria)
   :components ((:file "package")
                (:file "lw-gc")))
