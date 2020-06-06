@@ -112,14 +112,14 @@ generation."
    (button-full-gc capi:push-button
                    :text "Collect all"
                    :default-p t
-                   :callback #'(lambda (data interface)
-                                 (declare (ignore data interface))
+                   :callback-type :none
+                   :callback #'(lambda ()
                                  (harlequin-common-lisp:gc-generation t))
                    :documentation "Perform a full collection.")
    (button-refresh capi:push-button
                    :text "Refresh"
-                   :callback #'(lambda (data interface)
-                                 (declare (ignore data))
+                   :callback-type :interface
+                   :callback #'(lambda (interface)
                                  (tick interface))
                    :documentation "Perform a manual UI refresh."))
   (:layouts
