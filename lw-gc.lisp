@@ -18,12 +18,30 @@ injected via the interface parent."))
     :documentation
     "Display information of the number of allocated objects for the
 current generation.")
-   (cons-title-pane capi:title-pane :accessor gc-generation-info-cons-title-pane :title "Cons")
-   (non-pointer-title-pane capi:title-pane :accessor gc-generation-info-non-pointer-title-pane :title "Non pointer")
-   (other-title-pane capi:title-pane :accessor gc-generation-info-other-title-pane :title "Other")
-   (symbol-title-pane capi:title-pane :accessor gc-generation-info-symbol-title-pane :title "Symbol")
-   (function-title-pane capi:title-pane :accessor gc-generation-info-function-title-pane :title "Function")
-   (weak-title-pane capi:title-pane :accessor gc-generation-info-weak-title-pane :title "Weak")
+   (cons-title-pane
+    capi:title-pane
+    :accessor gc-generation-info-cons-title-pane
+    :title "Cons")
+   (non-pointer-title-pane
+    capi:title-pane
+    :accessor gc-generation-info-non-pointer-title-pane
+    :title "Non pointer")
+   (other-title-pane
+    capi:title-pane
+    :accessor gc-generation-info-other-title-pane
+    :title "Other")
+   (symbol-title-pane
+    capi:title-pane
+    :accessor gc-generation-info-symbol-title-pane
+    :title "Symbol")
+   (function-title-pane
+    capi:title-pane
+    :accessor gc-generation-info-function-title-pane
+    :title "Function")
+   (weak-title-pane
+    capi:title-pane
+    :accessor gc-generation-info-weak-title-pane
+    :title "Weak")
    (gc-button
     capi:push-button
     :text "Collect"
@@ -33,17 +51,21 @@ current generation.")
     :documentation
     "Performs a garbage collection of the current generation."))
   (:layouts
-   (main-layout capi:column-layout '(allocated
-                                     fragmentation-state-layout
-                                     gc-button))
-   (fragmentation-state-layout capi:row-layout
-                               '(cons-title-pane
-                                 symbol-title-pane
-                                 function-title-pane
-                                 weak-title-pane
-                                 non-pointer-title-pane
-                                 other-title-pane)))
-  (:documentation "Contains a graphical representation of a GC region (generation).")
+   (main-layout
+    capi:column-layout
+    '(allocated
+      fragmentation-state-layout
+      gc-button))
+   (fragmentation-state-layout
+    capi:row-layout
+    '(cons-title-pane
+      symbol-title-pane
+      function-title-pane
+      weak-title-pane
+      non-pointer-title-pane
+      other-title-pane)))
+  (:documentation
+   "Contains a graphical representation of a GC region (generation).")
   (:default-initargs :title-position :frame))
 
 (defmethod gc-generation-info-title ((self gc-generation-info))
@@ -109,32 +131,37 @@ generation."
    (generation-5 gc-generation-info :number 5 :accessor gc-info-generation-5-pane :title "Generation 5")
    (generation-6 gc-generation-info :number 6 :accessor gc-info-generation-6-pane :title "Generation 6")
    (generation-7 gc-generation-info :number 7 :accessor gc-info-generation-7-pane :title "Generation 7")
-   (button-full-gc capi:push-button
-                   :text "Collect all"
-                   :default-p t
-                   :callback-type :none
-                   :callback #'(lambda ()
-                                 (harlequin-common-lisp:gc-generation t))
-                   :documentation "Perform a full collection.")
-   (button-refresh capi:push-button
-                   :text "Refresh"
-                   :callback-type :interface
-                   :callback #'(lambda (interface)
-                                 (tick interface))
-                   :documentation "Perform a manual UI refresh."))
+   (button-full-gc
+    capi:push-button
+    :text "Collect all"
+    :default-p t
+    :callback-type :none
+    :callback #'(lambda ()
+                  (harlequin-common-lisp:gc-generation t))
+    :documentation "Perform a full collection.")
+   (button-refresh
+    capi:push-button
+    :text "Refresh"
+    :callback-type :interface
+    :callback #'(lambda (interface)
+                  (tick interface))
+    :documentation "Perform a manual UI refresh."))
   (:layouts
-   (main-layout capi:column-layout '(allocated
-                                     generations-layout
-                                     button-layout))
-   (generations-layout capi:column-layout
-                       '(generation-1
-                         generation-2
-                         generation-3
-                         generation-4
-                         generation-5
-                         generation-6
-                         generation-7))
-   (button-layout capi:row-layout '(button-full-gc button-refresh)))
+   (main-layout
+    capi:column-layout
+    '(allocated generations-layout button-layout))
+   (generations-layout
+    capi:column-layout
+    '(generation-1
+      generation-2
+      generation-3
+      generation-4
+      generation-5
+      generation-6
+      generation-7))
+   (button-layout
+    capi:row-layout
+    '(button-full-gc button-refresh)))
   (:documentation
    "The main interface of the application. Contains an overview of all
 generations, as well as an option to perform a full cleanup")
