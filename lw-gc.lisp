@@ -60,9 +60,7 @@ generation."
   (system:gen-num-segments-fragmentation-state (gc-generation-info-generation-number self)))
 
 (defmethod tick ((self gc-generation-info))
-  (setf (capi:title-pane-text (gc-generation-info-allocated-pane self))
-        (format nil "~a allocated"
-                (gc-generation-info-allocated self)))
+  ;; Update fragmentation info.
   (let ((fragmentation (gc-generation-info-fragmentation-state self)))
     (flet ((fetch (key)
              (format nil "~d"
@@ -79,7 +77,14 @@ generation."
       (setf (capi:title-pane-text (gc-generation-info-non-pointer-title-pane self))
             (fetch :non-pointer))
       (setf (capi:title-pane-text (gc-generation-info-other-title-pane self))
-            (fetch :other)))))
+            (fetch :other))))
+  (let ((allocated (gc-generation-info-allocated self)))
+    ;; Update total allocated info.
+    (setf (capi:title-pane-text (gc-generation-info-allocated-pane self))
+          (format nil "~a allocated" allocated))
+    ;; Only show generation info when it actually holds allocations.
+    ;; TODO Need to improve this and hide the title :)
+    (funcall (if (zerop allocated) #'capi:hide-pane #'capi:show-pane) self)))
 
 ;; DELME This is no longer necessary since GC-INFO will already
 ;; perform the TICK function for each generation. Consider removing.
